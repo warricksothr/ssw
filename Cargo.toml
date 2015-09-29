@@ -3,5 +3,8 @@ name = "simple_server_wrapper"
 version = "0.1.0"
 authors = ["Drew Short <warrick@sothr.com>"]
 
+[dependencies]
+time = "*"
+
 [dependencies.rustbox]
 git = "https://github.com/gchp/rustbox.git"

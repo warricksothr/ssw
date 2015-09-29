@@ -3,6 +3,7 @@ name = "simple_server_wrapper"
 version = "0.1.0"
 dependencies = [
  "rustbox 0.7.2 (git+https://github.com/gchp/rustbox.git)",
+ "time 0.1.32 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

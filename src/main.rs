@@ -1,7 +1,9 @@
 extern crate rustbox;
+extern crate time;
 
 use std::error::Error;
 use std::default::Default;
+use time::Duration;
 
 use rustbox::{Color, RustBox};
 use rustbox::Key;
@@ -14,23 +16,11 @@ fn main() {
 
     let mut lines: Vec<&str> = Vec::new();
     lines.push("Hello World!");
-    lines.push("Hello World!");
-    lines.push("Hello World!");
-    lines.push("Hello World!");
-    lines.push("Hello World!");
-    lines.push("Hello World!");
-    lines.push("Hello World!");
-    lines.push("Hello World!");
-    lines.push("Hello World!");
-    lines.push("Hello World!");
-    lines.push("Hello World!");
-    lines.push("Hello World!");
-    lines.push("Hello World!");
-    lines.push("Hello World!");
 
     draw_interface(&rustbox, &lines);
+    let mut cur = 0;
     loop {
-        match rustbox.poll_event(false) {
+        match rustbox.peek_event(Duration::milliseconds(33), false) {
             Ok(rustbox::Event::KeyEvent(key)) => {
                 match key {
                     Some(Key::Ctrl('q')) => { break; }
@@ -41,6 +31,9 @@ fn main() {
             Err(e) => panic!("{}", e.description()),
             _ => { }
         }
+        lines.push("Temp");
+        draw_interface(&rustbox, &lines);
+        cur += 1;
     }
 }
 
