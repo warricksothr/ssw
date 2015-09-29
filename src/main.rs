@@ -12,6 +12,39 @@ fn main() {
         Result::Err(e) => panic!("{}",e),
     };
 
+    let mut lines: Vec<&str> = Vec::new();
+    lines.push("Hello World!");
+    lines.push("Hello World!");
+    lines.push("Hello World!");
+    lines.push("Hello World!");
+    lines.push("Hello World!");
+    lines.push("Hello World!");
+    lines.push("Hello World!");
+    lines.push("Hello World!");
+    lines.push("Hello World!");
+    lines.push("Hello World!");
+    lines.push("Hello World!");
+    lines.push("Hello World!");
+    lines.push("Hello World!");
+    lines.push("Hello World!");
+
+    draw_interface(&rustbox, &lines);
+    loop {
+        match rustbox.poll_event(false) {
+            Ok(rustbox::Event::KeyEvent(key)) => {
+                match key {
+                    Some(Key::Ctrl('q')) => { break; }
+                    Some(Key::Ctrl('i')) => {  }
+                    _ => { }
+                }
+            },
+            Err(e) => panic!("{}", e.description()),
+            _ => { }
+        }
+    }
+}
+
+fn draw_interface(rustbox: &RustBox, lines: &Vec<&str>) {
     let min_draw_width = 0 as usize;
     let max_draw_width = rustbox.width() - 1;
     let min_output_width = min_draw_width;
@@ -21,24 +54,36 @@ fn main() {
     let min_draw_height = 0 as usize;
     let min_output_height = min_draw_height + 1;
     let max_output_height = max_draw_height - 3;
+    
+    let header_height = min_draw_height;
     let seperator_height = max_draw_height - 2;
 
-    rustbox.print(min_output_width,min_output_height, rustbox::RB_BOLD, Color::White, Color::Black, "Hello World!");
+    // Print a header
+    for i in (min_draw_width..max_draw_width) {
+        rustbox.print_char(i,header_height, rustbox::RB_BOLD, Color::White, Color::White, ' ');
+    }
+
+    // Determine how much we can print
+    let mut lines_print_start = 0;
+    let lines_print_end = lines.len();
+    if lines.len() > max_output_height {
+        lines_print_start = lines.len() - max_output_height - min_output_height;
+    }
+
+    let mut line = min_output_height;
+    for index in (lines_print_start..lines_print_end) {
+        rustbox.print(min_output_width,line, rustbox::RB_BOLD, Color::White, Color::Black, lines[index]);
+        line += 1;
+    }
+    
+    // Print a footer seperator
     for i in (min_draw_width..max_draw_width) {
         rustbox.print_char(i,seperator_height, rustbox::RB_BOLD, Color::White, Color::White, ' ');
     }
-    rustbox.print(min_draw_width,max_draw_height, rustbox::RB_BOLD, Color::White, Color::Black, "Press 'q' to quit.");
+
+    // Print a control line
+    rustbox.print(min_draw_width,max_draw_height, rustbox::RB_BOLD, Color::White, Color::Black, "Press 'ctrl + i' to enter a command and 'ctrl + q' to quit.");
+    
+    //draw
     rustbox.present();
-    loop {
-        match rustbox.poll_event(false) {
-            Ok(rustbox::Event::KeyEvent(key)) => {
-                match key {
-                    Some(Key::Char('q')) => { break; }
-                    _ => { }
-                }
-            },
-            Err(e) => panic!("{}", e.description()),
-            _ => { }
-        }
-    }
 }
