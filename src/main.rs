@@ -51,6 +51,9 @@ fn draw_interface(rustbox: &RustBox, lines: &Vec<&str>) {
     let header_height = min_draw_height;
     let seperator_height = max_draw_height - 2;
 
+    //Clean the interface
+    rustbox.clear();
+    
     // Print a header
     for i in (min_draw_width..max_draw_width) {
         rustbox.print_char(i,header_height, rustbox::RB_BOLD, Color::White, Color::White, ' ');
