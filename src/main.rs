@@ -15,11 +15,15 @@ fn main() {
     };
 
     let mut lines: Vec<&str> = Vec::new();
-    lines.push("Hello World!");
+    lines.push("Started Simple Server Manager!");
+    let mut status = "Started Simple Server Manager";
+    let mut input = String::new();
 
-    draw_interface(&rustbox, &lines);
+
+    draw_interface(&rustbox, &status, &input, &lines);
     let mut cur = 0;
     loop {
+        status = "Running";
         match rustbox.peek_event(Duration::milliseconds(33), false) {
             Ok(rustbox::Event::KeyEvent(key)) => {
                 match key {
@@ -32,12 +36,12 @@ fn main() {
             _ => { }
         }
         lines.push("Temp");
-        draw_interface(&rustbox, &lines);
+        draw_interface(&rustbox, &status, &input, &lines);
         cur += 1;
     }
 }
 
-fn draw_interface(rustbox: &RustBox, lines: &Vec<&str>) {
+fn draw_interface(rustbox: &RustBox, status: &str, input: &String, lines: &Vec<&str>) {
     let min_draw_width = 0 as usize;
     let max_draw_width = rustbox.width() - 1;
     let min_output_width = min_draw_width;
