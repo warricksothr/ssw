@@ -3,6 +3,7 @@ extern crate time;
 
 use std::error::Error;
 use std::default::Default;
+use std::io::Read;
 use time::Duration;
 
 use rustbox::{Color, RustBox};
@@ -16,25 +17,38 @@ fn main() {
 
     let mut lines: Vec<&str> = Vec::new();
     lines.push("Started Simple Server Manager!");
-    let mut status = "Started Simple Server Manager";
+    let mut status = String::new();
+    status.push_str("Started Simple Server Manager");
     let mut input = String::new();
 
+    // User Input
+    let mut ui_buffer: Vec<u8> = Vec::new();
+    let mut reader = std::io::stdin();
+    let mut read_std_in = false;
 
     draw_interface(&rustbox, &status, &input, &lines);
     let mut cur = 0;
     loop {
-        status = "Running";
         match rustbox.peek_event(Duration::milliseconds(33), false) {
             Ok(rustbox::Event::KeyEvent(key)) => {
                 match key {
-                    Some(Key::Ctrl('q')) => { break; }
-                    Some(Key::Ctrl('i')) => {  }
+                    Some(Key::Ctrl('q')) => { break; },
+                    Some(Key::Ctrl('i')) => { 
+                        read_std_in = !read_std_in; 
+                        status.clear(); 
+                        status.push_str(&format!("Insert Mode: {}", read_std_in)); 
+                    },
                     _ => { }
                 }
             },
             Err(e) => panic!("{}", e.description()),
             _ => { }
         }
+        if (read_std_in) {
+            reader.read(&mut ui_buffer);
+            ui_buffer.clear();
+        }
+        input.push_str(&String::from_utf8(ui_buffer).ok().unwrap());
         lines.push("Temp");
         draw_interface(&rustbox, &status, &input, &lines);
         cur += 1;
@@ -59,11 +73,7 @@ fn draw_interface(rustbox: &RustBox, status: &str, input: &String, lines: &Vec<&
     rustbox.clear();
     
     // Print a header
-
-    rustbox.print(0,header_height, rustbox::RB_BOLD, Color::White, Color::White, &center(status, max_output_width));
-    //for i in (min_draw_width..max_draw_width) {
-    //    rustbox.print_char(i,header_height, rustbox::RB_BOLD, Color::White, Color::White, ' ');
-    //}
+    rustbox.print(0,header_height, rustbox::RB_BOLD, Color::Black, Color::White, &center(status, max_output_width));
 
     // Determine how much we can print
     let mut lines_print_start = 0;
