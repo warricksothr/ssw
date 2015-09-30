@@ -59,9 +59,11 @@ fn draw_interface(rustbox: &RustBox, status: &str, input: &String, lines: &Vec<&
     rustbox.clear();
     
     // Print a header
-    for i in (min_draw_width..max_draw_width) {
-        rustbox.print_char(i,header_height, rustbox::RB_BOLD, Color::White, Color::White, ' ');
-    }
+
+    rustbox.print(0,header_height, rustbox::RB_BOLD, Color::White, Color::White, &center(status, max_output_width));
+    //for i in (min_draw_width..max_draw_width) {
+    //    rustbox.print_char(i,header_height, rustbox::RB_BOLD, Color::White, Color::White, ' ');
+    //}
 
     // Determine how much we can print
     let mut lines_print_start = 0;
@@ -82,8 +84,31 @@ fn draw_interface(rustbox: &RustBox, status: &str, input: &String, lines: &Vec<&
     }
 
     // Print a control line
-    rustbox.print(min_draw_width,max_draw_height, rustbox::RB_BOLD, Color::White, Color::Black, "Press 'ctrl + i' to enter a command and 'ctrl + q' to quit.");
+    rustbox.print(min_draw_width,max_draw_height, rustbox::RB_BOLD, Color::White, Color::Black, &right_justify("Press 'ctrl + i' to enter a command and 'ctrl + q' to quit.", max_output_width));
     
     //draw
     rustbox.present();
+}
+
+fn center(message: &str, width: usize) -> String {
+    let left_spaces = (width/2)-(message.len()/2);
+    let mut result = String::new();
+    for _i in (0..left_spaces) {
+        result.push_str(" ");
+    }
+    result.push_str(message);
+    for _i in (result.len()..width) {
+        result.push_str(" ");
+    }
+    result
+}
+
+fn right_justify(message: &str, width: usize) -> String {
+    let left_spaces = width-message.len();
+    let mut result = String::new();
+    for _i in (0..left_spaces) {
+        result.push_str(" ");
+    }
+    result.push_str(message);
+    result
 }
