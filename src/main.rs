@@ -100,6 +100,7 @@ fn draw_interface(rustbox: &RustBox, status: &str, input: &String, lines: &Vec<&
     rustbox.present();
 }
 
+// return a centered string
 fn center(message: &str, width: usize) -> String {
     let left_spaces = (width/2)-(message.len()/2);
     let mut result = String::new();
@@ -113,6 +114,7 @@ fn center(message: &str, width: usize) -> String {
     result
 }
 
+// right justify the message
 fn right_justify(message: &str, width: usize) -> String {
     let left_spaces = width-message.len();
     let mut result = String::new();
